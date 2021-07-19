@@ -4,7 +4,7 @@
         <TargetFramework>net5.0</TargetFramework>
         <AssemblyName>SmartHead.Auth.Claims</AssemblyName>
         <IsPackable>true</IsPackable>
-        <PackageProjectUrl>https://github.com/smarthead-dev/SmartHead.Auth</PackageProjectUrl>
+        <PackageProjectUrl>https://github.com/smarthead/SmartHead.Auth</PackageProjectUrl>
         <Version Condition="$(Configuration) != Debug">0.0.$(GITHUB_RUN_NUMBER)</Version>
         <Company>SmartHead</Company>
         <IsTestProject>false</IsTestProject>
