@@ -8,16 +8,19 @@ using Microsoft.AspNetCore.Identity;
 
 namespace SmartHead.Auth.Claims
 {
-    public class ClaimsService<TUser> : IClaimsService<TUser>  
+    public class ClaimsService<TUser> : IClaimsService<TUser>
         where TUser : IdentityUser<long>
     {
         private readonly UserManager<TUser> _userManager;
+
         public ClaimsService(UserManager<TUser> userManager)
         {
             _userManager = userManager;
         }
 
-        public async Task<ClaimsIdentity> CreateUserClaimsAsync(TUser user, Func<string, bool> rolesFilter = null)
+        public async Task<ClaimsIdentity> CreateUserClaimsAsync(TUser user, 
+            Func<string, bool> rolesFilter = null,
+            List<Claim> additionalClaims = null)
         {
             var roles = await _userManager.GetRolesAsync(user);
 
@@ -28,10 +31,17 @@ namespace SmartHead.Auth.Claims
             var claims = new List<Claim>
             {
                 new(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
-                new(ClaimsIdentity.DefaultNameClaimType, user.UserName),
-                new(ClaimsIdentity.DefaultRoleClaimType, roles.FirstOrDefault() ?? string.Empty)
+                new(ClaimsIdentity.DefaultNameClaimType, user.UserName)
             };
 
+            claims.AddRange(roles.Select(role =>
+                new Claim(ClaimsIdentity.DefaultRoleClaimType, role)));
+
+            if (additionalClaims != null)
+            {
+                claims.AddRange(additionalClaims);
+            }
+            
             var claimsIdentity =
                 new ClaimsIdentity(
                     claims,
