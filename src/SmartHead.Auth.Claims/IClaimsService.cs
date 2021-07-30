@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
@@ -8,6 +9,8 @@ namespace SmartHead.Auth.Claims
     public interface IClaimsService<TUser> 
         where TUser : IdentityUser<long>
     {
-        Task<ClaimsIdentity> CreateUserClaimsAsync(TUser user, Func<string, bool> rolesFilter = null);
+        Task<ClaimsIdentity> CreateUserClaimsAsync(TUser user, 
+            Func<string, bool> rolesFilter = null, 
+            List<Claim> additionalClaims = null);
     }
 }
